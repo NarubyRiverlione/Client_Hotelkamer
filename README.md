@@ -1,6 +1,3 @@
-# React starter
+# HotelKamer clientr
 
-## Geconfigureerd
-- eslint met airBnb
-- React Navigation
-- Redux: store via Context Hook
+React frontend voor HotelKamer smartcontract : https://github.com/NarubyRiverlione/SmartContract_HotelKamer

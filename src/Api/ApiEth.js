@@ -20,15 +20,26 @@ const HotelKamer = () => {
 }
 
 
-export const KamerOphalen = async (address) => {
-  const Hotel = HotelKamer()
-  const Kamer = await Hotel.methods.kamer().call({ from: address })
-  return Kamer
-}
+export const KamerOphalen = async (address) => (
+  await HotelKamer().methods.kamer().call({ from: address })
+)
 
 export const ZetPrijs = async (address, prijs) => {
   const prijsWei = web3.utils.toWei(prijs.toString())
-  const Hotel = HotelKamer()
-  await Hotel.methods.ZetPrijs(prijsWei).send({ from: address })
+  await HotelKamer().methods.ZetPrijs(prijsWei).send({ from: address })
   return await KamerOphalen(address)
 }
+
+export const ZetStatus = async (address, nieuweStatus) => {
+  if (nieuweStatus === 0) await ZetVrij(address)
+  if (nieuweStatus === 1) await ZetGeboekt(address)
+  return await KamerOphalen(address)
+}
+
+const ZetVrij = async (address) => (
+  await HotelKamer().methods.ZetVrij().send({ from: address })
+)
+
+const ZetGeboekt = async (address) => (
+  await HotelKamer().methods.ZetGeboekt().send({ from: address })
+)

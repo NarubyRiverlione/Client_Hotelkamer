@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { CstTekst, CstFouten } from '../Cst'
 
-import { GetAddressByAccountByNR, KamerOphalen, ZetPrijs, GetBalans } from '../Api/ApiEth'
+import { GetAddressByAccountByNR, KamerOphalen, ZetPrijs, ZetStatus, GetBalans } from '../Api/ApiEth'
 
 import KiesAccount from '../Components/KiesAccount'
 import ToonKamer from '../Components/ToonKamer'
 import PrijsAanpassen from '../Components/PrijsAanpassen'
+import StatusAanpassen from '../Components/StatusAanpassen'
 
 const { LandingScherm: LandingTxt } = CstTekst
 
@@ -14,6 +15,7 @@ const LandingScherm = () => {
   const [Balans, setBalans] = useState()
   const [Kamer, setKamer] = useState()
   const [Fout, setFout] = useState()
+
 
   useEffect(() => {
     AccountGekozen(0)
@@ -50,19 +52,26 @@ const LandingScherm = () => {
       setFout(fout.message)
     }
   }
-
   const AanpassenPrijs = async (prijs) => {
     try {
-      console.log(`nieuwe prijs ${prijs}`)
       const updateKamer = await ZetPrijs(address, prijs)
       setKamer(updateKamer)
-      setFout(null)
+      setFout()
     }
     catch (fout) {
       VerwerkFout(fout)
     }
   }
-
+  const AanpassenStatus = async (nieuweStatus) => {
+    try {
+      const updateKamer = await ZetStatus(address, nieuweStatus)
+      setKamer(updateKamer)
+      setFout()
+    }
+    catch (fout) {
+      VerwerkFout(fout)
+    }
+  }
 
   return (
     <React.Fragment>
@@ -78,6 +87,9 @@ const LandingScherm = () => {
 
       <h2>{LandingTxt.EnkelContractEigenaar}</h2>
       <PrijsAanpassen Aanpassen={AanpassenPrijs} />
+      <br /> <br />
+      <StatusAanpassen Aanpassen={AanpassenStatus} />
+      <br /> <br />
 
     </React.Fragment>
   )

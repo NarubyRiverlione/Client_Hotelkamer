@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { CstTekst, CstFouten } from '../Cst'
+import { CstTekst, CstFouten, ContractAddress } from '../Cst'
 
-import { GetAddressByAccountByNR, KamerOphalen, ZetPrijs, ZetStatus, GetBalans } from '../Api/ApiEth'
+import {
+  GetAddressByAccountByNR, OphalenBalans,
+  KamerOphalen, ZetPrijs, ZetStatus, Uitbetaling
+} from '../Api/ApiEth'
 
 import KiesAccount from '../Components/KiesAccount'
 import ToonKamer from '../Components/ToonKamer'
 import PrijsAanpassen from '../Components/PrijsAanpassen'
 import StatusAanpassen from '../Components/StatusAanpassen'
+import BalansContract from '../Components/BalansContract'
 
 const { LandingScherm: LandingTxt } = CstTekst
 
@@ -15,6 +19,7 @@ const LandingScherm = () => {
   const [Balans, setBalans] = useState()
   const [Kamer, setKamer] = useState()
   const [Fout, setFout] = useState()
+  const [ContractBalans, setContractBalans] = useState()
 
 
   useEffect(() => {
@@ -33,7 +38,7 @@ const LandingScherm = () => {
     try {
       const newAddress = await GetAddressByAccountByNR(accountNR)
       setAddress(newAddress)
-      const newBalans = await GetBalans(newAddress)
+      const newBalans = await OphalenBalans(newAddress)
       setBalans(newBalans.toFixed(4))
       setFout()
     }
@@ -72,6 +77,27 @@ const LandingScherm = () => {
       VerwerkFout(fout)
     }
   }
+  const BetaalUit = async () => {
+    try {
+      await Uitbetaling(address)
+      await ContractBalansOpvragen()
+      setFout()
+    }
+    catch (fout) {
+      VerwerkFout(fout)
+    }
+  }
+  const ContractBalansOpvragen = async () => {
+    try {
+      const balans = await OphalenBalans(ContractAddress)
+      setContractBalans(balans.toFixed(4))
+      setFout()
+    }
+    catch (fout) {
+      VerwerkFout(fout)
+    }
+  }
+
 
   return (
     <React.Fragment>
@@ -90,7 +116,11 @@ const LandingScherm = () => {
       <br /> <br />
       <StatusAanpassen Aanpassen={AanpassenStatus} />
       <br /> <br />
-
+      <BalansContract
+        Balans={ContractBalans}
+        Opvragen={ContractBalansOpvragen}
+        BetaalUit={BetaalUit}
+      />
     </React.Fragment>
   )
 }

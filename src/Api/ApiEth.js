@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import HotelJson from './HotelKamer.json'
+import { ContractAddress } from '../Cst'
 
 const web3 = new Web3('ws://localhost:7545')
 
@@ -8,16 +9,15 @@ export const GetAddressByAccountByNR = async (AccountNR) => {
   return accounts[AccountNR]
 }
 
-export const GetBalans = async (address) => {
+export const OphalenBalans = async (address) => {
   const balansWei = await web3.eth.getBalance(address)
   const balansEth = web3.utils.fromWei(balansWei, 'ether')
   return parseFloat(balansEth, 10)
 }
 
-const HotelKamer = () => {
-  const ContractAddress = '0xB0f060c8be1C73A6C78942B1CeEc626F2318F25F'
-  return new web3.eth.Contract(HotelJson.abi, ContractAddress)
-}
+const HotelKamer = () => (
+  new web3.eth.Contract(HotelJson.abi, ContractAddress)
+)
 
 
 export const KamerOphalen = async (address) => (
@@ -42,4 +42,8 @@ const ZetVrij = async (address) => (
 
 const ZetGeboekt = async (address) => (
   await HotelKamer().methods.ZetGeboekt().send({ from: address })
+)
+
+export const Uitbetaling = async (address) => (
+  await HotelKamer().methods.Uitbetaling().send({ from: address })
 )

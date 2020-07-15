@@ -34,3 +34,5 @@ export const CstFouten = {
   GeenEigenaar: 'Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner',
   EnkelDoorEigenaar: 'Mag enkel uitgevoerd worden door de contract eigenaar'
 }
+
+export const ContractAddress = '0xB0f060c8be1C73A6C78942B1CeEc626F2318F25F'

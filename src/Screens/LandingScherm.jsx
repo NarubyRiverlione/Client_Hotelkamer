@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { CstTekst, CstFouten } from '../Cst'
 
-import { GetAddressByAccountByNR, KamerOphalen, ZetPrijs } from '../Api/ApiEth'
+import { GetAddressByAccountByNR, KamerOphalen, ZetPrijs, GetBalans } from '../Api/ApiEth'
 
 import KiesAccount from '../Components/KiesAccount'
 import ToonKamer from '../Components/ToonKamer'
@@ -10,9 +10,10 @@ import PrijsAanpassen from '../Components/PrijsAanpassen'
 const { LandingScherm: LandingTxt } = CstTekst
 
 const LandingScherm = () => {
-  const [address, setAddress] = useState(null)
-  const [Kamer, setKamer] = useState(null)
-  const [Fout, setFout] = useState(null)
+  const [address, setAddress] = useState()
+  const [Balans, setBalans] = useState()
+  const [Kamer, setKamer] = useState()
+  const [Fout, setFout] = useState()
 
   useEffect(() => {
     AccountGekozen(0)
@@ -27,15 +28,23 @@ const LandingScherm = () => {
   }
 
   const AccountGekozen = async (accountNR) => {
-    const newAddress = await GetAddressByAccountByNR(accountNR)
-    setAddress(newAddress)
+    try {
+      const newAddress = await GetAddressByAccountByNR(accountNR)
+      setAddress(newAddress)
+      const newBalans = await GetBalans(newAddress)
+      setBalans(newBalans.toFixed(4))
+      setFout()
+    }
+    catch (fout) {
+      setFout(fout.message)
+    }
   }
 
   const OphalenKamer = async () => {
     try {
       const KamerInfo = await KamerOphalen(address)
       setKamer(KamerInfo)
-      setFout(null)
+      setFout()
     }
     catch (fout) {
       setFout(fout.message)
@@ -62,7 +71,7 @@ const LandingScherm = () => {
       {Fout && (
         <h1 style={{ background: "red", color: "white" }}>{`Fout: ${Fout}`}</h1>
       )}
-      <KiesAccount AccountGekozen={AccountGekozen} />
+      <KiesAccount AccountGekozen={AccountGekozen} Balans={Balans} />
       <h2>{LandingTxt.VoorEidereen}</h2>
       <ToonKamer Kamer={Kamer} OphalenKamer={OphalenKamer} />
       <hr />

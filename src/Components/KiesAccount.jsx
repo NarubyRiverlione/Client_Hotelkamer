@@ -5,7 +5,7 @@ import { CstTekst } from '../Cst'
 const { LandingScherm: LandingTxt } = CstTekst
 
 
-const KiesAccount = ({ AccountGekozen }) => {
+const KiesAccount = ({ AccountGekozen, Balans }) => {
   const Keuze = (event) => {
     event.preventDefault()
     const { value } = event.target
@@ -25,6 +25,8 @@ const KiesAccount = ({ AccountGekozen }) => {
           <option value={4}>Account 4</option>
           <option value={5}>Account 5</option>
         </select>
+        &nbsp;&nbsp;
+        {Balans && (<span>{`Balans: ${Balans} Eth`}</span>)}
       </h4>
     </React.Fragment>
   )
@@ -34,4 +36,9 @@ export default KiesAccount
 
 KiesAccount.propTypes = {
   AccountGekozen: PropTypes.func.isRequired,
+  Balans: PropTypes.number,
+}
+
+KiesAccount.defaultProps = {
+  Balans: null
 }

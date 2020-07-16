@@ -13,8 +13,9 @@ import StatusAanpassen from '../Components/StatusAanpassen'
 import BalansContract from '../Components/BalansContract'
 import Uitbetalen from '../Components/Uitbetalen'
 import BoekingMaken from '../Components/BoekingMaken'
+import OpenenDeur from '../Components/OpenenDeur'
 
-const { LandingScherm: LandingTxt } = CstTekst
+const { HoofdScherm: Txt } = CstTekst
 
 const HoofdScherm = () => {
   const [Netwerk, setNetwerk] = useState()
@@ -86,10 +87,17 @@ const HoofdScherm = () => {
       setFout(VerwerkFout(fout))
     }
   }
-
+  const DeurOpenen = async () => {
+    try {
+      const kamer = await Netwerk.KamerdeurOpenen()
+      setKamer(kamer)
+    } catch (fout) {
+      setFout(VerwerkFout(fout))
+    }
+  }
   return (
     <React.Fragment>
-      <h1>{LandingTxt.Titel}</h1>
+      <h1>{Txt.Titel}</h1>
       <hr />
       {Fout && (
         <h1 style={{ background: 'red', color: 'white' }}>{`Fout: ${Fout}`}</h1>
@@ -99,7 +107,7 @@ const HoofdScherm = () => {
 
       {Netwerk && (
         <div>
-          <h2>{LandingTxt.VoorEidereen}</h2>
+          <h2>{Txt.VoorEidereen}</h2>
           <ToonKamer Kamer={Kamer} OphalenKamer={OphalenKamer} />
           <br />
           <br />
@@ -110,9 +118,17 @@ const HoofdScherm = () => {
           <br />
           <br />
           <BoekingMaken Boeken={Boeken} />
+          <br />
+          <br />
           <hr />
 
-          <h2>{LandingTxt.EnkelContractEigenaar}</h2>
+          <h2>{Txt.EnkelBoeker}</h2>
+          <OpenenDeur DeurOpenen={DeurOpenen} />
+          <br />
+          <br />
+          <hr />
+
+          <h2>{Txt.EnkelContractEigenaar}</h2>
           <PrijsAanpassen Aanpassen={AanpassenPrijs} />
           <br />
           <br />

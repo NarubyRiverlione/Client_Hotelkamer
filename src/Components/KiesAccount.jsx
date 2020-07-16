@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CstTekst } from '../Cst'
 
-const { LandingScherm: LandingTxt } = CstTekst
+const { HoofdScherm: LandingTxt } = CstTekst
 
 const KiesAccount = ({ Accounts, AccountGekozen, Balans }) => {
   const Keuze = (event) => {

@@ -60,4 +60,9 @@ export default class ApiEth {
     await this.HotelKamer().methods.MaakBoeking().send({ from: this.adres, value: betalingWei })
     return this.KamerOphalen()
   }
+
+  KamerdeurOpenen = async () => {
+    await this.HotelKamer().methods.OpenDeur().send({ from: this.adres })
+    return this.KamerOphalen()
+  }
 }

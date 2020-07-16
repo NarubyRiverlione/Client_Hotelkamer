@@ -4,11 +4,12 @@ export const CstTekst = {
   Foutmeldingen: {
     ApiOnbereikbaar: 'Er kunnen geen gegevens opgehaald worden. Controleer de internetverbinding.',
   },
-  LandingScherm: {
+  HoofdScherm: {
     Titel: 'Hotelkamer Smartcontract',
     AccountKeuze: 'Gebruik',
     VoorEidereen: 'Beschikbaar voor iedereen',
     EnkelContractEigenaar: 'Enkel contract eigenaar',
+    EnkelBoeker: 'Enkel voor de boeker',
   },
   NietGevonden: {
     Tekst: 'De pagina is niet gevonden',
@@ -21,6 +22,10 @@ export const CstFouten = {
   EnkelDoorEigenaar: 'Mag enkel uitgevoerd worden door de contract eigenaar',
   NietVrij: 'Returned error: VM Exception while processing transaction: revert Kamer is niet vrij',
   KamerIsNietVrij: 'Kan niet boeken omdat de kamer niet vrij is',
+  IsGeenBoeker: 'Returned error: VM Exception while processing transaction: revert Enkel de boeker mag deze actie doen',
+  EnkelDoorBoeker: 'Enkel de boeker kan deze actie doen',
+  BeschikbareDagenOpgebruikt: 'Returned error: VM Exception while processing transaction: revert Alle geboekte dagen zijn opgebruikt',
+  GeenBeschikbareDagen: 'Alle geboekte dagen zijn opgebruikt',
 }
 
 export const CstNetwerken = [

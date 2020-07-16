@@ -91,6 +91,7 @@ const HoofdScherm = () => {
     try {
       const kamer = await Netwerk.KamerdeurOpenen()
       setKamer(kamer)
+      setFout()
     } catch (fout) {
       setFout(VerwerkFout(fout))
     }

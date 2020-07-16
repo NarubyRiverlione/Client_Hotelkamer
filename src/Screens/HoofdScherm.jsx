@@ -1,12 +1,12 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react'
-import { CstTekst, CstFouten, ContractAddress } from '../Cst'
+import { CstTekst } from '../Cst'
 
-import {
-  GetAddressByAccountByNR, OphalenBalans,
-  KamerOphalen, ZetPrijs, ZetStatus, Uitbetaling, MaakBoeking,
-} from '../Api/ApiEth'
+import ApiEth from '../Api/ApiEth'
+import VerwerkFout from '../Api/VerwerkFout'
 
-import KiesAccount from '../Components/KiesAccount'
+// import KiesAccount from '../Components/KiesAccount'
+import KiesNetwerk from '../Components/KiesNetwerk'
 import ToonKamer from '../Components/ToonKamer'
 import PrijsAanpassen from '../Components/PrijsAanpassen'
 import StatusAanpassen from '../Components/StatusAanpassen'
@@ -17,44 +17,22 @@ import BoekingMaken from '../Components/BoekingMaken'
 const { LandingScherm: LandingTxt } = CstTekst
 
 const HoofdScherm = () => {
-  const [address, setAddress] = useState()
-  const [Balans, setBalans] = useState()
+  const [Netwerk, setNetwerk] = useState()
   const [Kamer, setKamer] = useState()
   const [Fout, setFout] = useState()
   const [ContractBalans, setContractBalans] = useState()
 
-  const AccountGekozen = async (accountNR) => {
-    try {
-      const newAddress = await GetAddressByAccountByNR(accountNR)
-      setAddress(newAddress)
-      const newBalans = await OphalenBalans(newAddress)
-      setBalans(newBalans.toFixed(4))
-      setFout()
-    } catch (fout) {
-      setFout(fout.message)
+  const NetwerkGekozen = (netwerk, accountAdres) => {
+    if (!netwerk || !accountAdres) {
+      setNetwerk()
+      return
     }
-  }
-
-  useEffect(() => {
-    AccountGekozen(0)
-  }, [])
-
-  const VerwerkFout = (fout) => {
-    switch (fout.message) {
-      case CstFouten.GeenEigenaar:
-        setFout(CstFouten.EnkelDoorEigenaar)
-        break
-      case CstFouten.NietVrij:
-        setFout(CstFouten.KamerIsNietVrij)
-        break
-      default:
-        setFout(fout.message)
-    }
+    setNetwerk(new ApiEth(netwerk, accountAdres))
   }
 
   const OphalenKamer = async () => {
     try {
-      const KamerInfo = await KamerOphalen(address)
+      const KamerInfo = await Netwerk.KamerOphalen()
       setKamer(KamerInfo)
       setFout()
     } catch (fout) {
@@ -63,48 +41,49 @@ const HoofdScherm = () => {
   }
   const AanpassenPrijs = async (prijs) => {
     try {
-      const updateKamer = await ZetPrijs(address, prijs)
+      const updateKamer = await Netwerk.ZetPrijs(prijs)
       setKamer(updateKamer)
       setFout()
     } catch (fout) {
-      VerwerkFout(fout)
+      setFout(VerwerkFout(fout))
     }
   }
   const AanpassenStatus = async (nieuweStatus) => {
     try {
-      const updateKamer = await ZetStatus(address, nieuweStatus)
+      const updateKamer = await Netwerk.ZetStatus(nieuweStatus)
       setKamer(updateKamer)
       setFout()
     } catch (fout) {
-      VerwerkFout(fout)
+      setFout(VerwerkFout(fout))
     }
   }
   const ContractBalansOpvragen = async () => {
     try {
-      const balans = await OphalenBalans(ContractAddress)
+      const balans = await Netwerk.OphalenContractBalans()
       setContractBalans(balans.toFixed(4))
       setFout()
     } catch (fout) {
-      VerwerkFout(fout)
+      setFout(VerwerkFout(fout))
     }
   }
   const BetaalUit = async () => {
     try {
-      await Uitbetaling(address)
+      await Netwerk.Uitbetaling()
       await ContractBalansOpvragen()
-      await AccountGekozen(0) // om nieuw saldo eigenaar te tonen
+      // TODO om nieuw saldo eigenaar te tonen
+      // await AccountGekozen(0)
       setFout()
     } catch (fout) {
-      VerwerkFout(fout)
+      setFout(VerwerkFout(fout))
     }
   }
   const Boeken = async (betaling) => {
     try {
-      const kamer = await MaakBoeking(address, betaling)
+      const kamer = await Netwerk.MaakBoeking(betaling)
       setKamer(kamer)
       setFout()
     } catch (fout) {
-      VerwerkFout(fout)
+      setFout(VerwerkFout(fout))
     }
   }
 
@@ -115,30 +94,36 @@ const HoofdScherm = () => {
       {Fout && (
         <h1 style={{ background: 'red', color: 'white' }}>{`Fout: ${Fout}`}</h1>
       )}
-      <KiesAccount AccountGekozen={AccountGekozen} Balans={Balans} />
-      <h2>{LandingTxt.VoorEidereen}</h2>
-      <ToonKamer Kamer={Kamer} OphalenKamer={OphalenKamer} />
-      <br />
-      <br />
-      <BalansContract
-        Balans={ContractBalans}
-        Opvragen={ContractBalansOpvragen}
-      />
-      <br />
-      <br />
-      <BoekingMaken Boeken={Boeken} />
-      <hr />
 
-      <h2>{LandingTxt.EnkelContractEigenaar}</h2>
-      <PrijsAanpassen Aanpassen={AanpassenPrijs} />
-      <br />
-      <br />
-      <StatusAanpassen Aanpassen={AanpassenStatus} />
-      <br />
-      <br />
-      <Uitbetalen
-        BetaalUit={BetaalUit}
-      />
+      <KiesNetwerk NetwerkGekozen={NetwerkGekozen} />
+
+      {Netwerk && (
+        <div>
+          <h2>{LandingTxt.VoorEidereen}</h2>
+          <ToonKamer Kamer={Kamer} OphalenKamer={OphalenKamer} />
+          <br />
+          <br />
+          <BalansContract
+            Balans={ContractBalans}
+            Opvragen={ContractBalansOpvragen}
+          />
+          <br />
+          <br />
+          <BoekingMaken Boeken={Boeken} />
+          <hr />
+
+          <h2>{LandingTxt.EnkelContractEigenaar}</h2>
+          <PrijsAanpassen Aanpassen={AanpassenPrijs} />
+          <br />
+          <br />
+          <StatusAanpassen Aanpassen={AanpassenStatus} />
+          <br />
+          <br />
+          <Uitbetalen
+            BetaalUit={BetaalUit}
+          />
+        </div>
+      )}
     </React.Fragment>
   )
 }

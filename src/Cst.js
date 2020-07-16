@@ -1,18 +1,4 @@
 /* eslint {max-len:off} */
-export const CstFoutAPIOnbereikbaar = 'Network Error'
-export const CstApi = {
-  ProdUrlBase: 'https://XXXXXXXXX.azurewebsites.net/', // Azure Functions
-  DevUrlBase: 'http://localhost:7071/', // Azure Functions, lokaal debug
-
-  UrlAPIBase: 'api/', // Azure Functions
-
-  Fout: 'Fout bij api',
-}
-
-export const CstRoutes = {
-  basename: '', // basename moet een leading slash hebben
-  siteName: '/',
-}
 
 export const CstTekst = {
   Foutmeldingen: {
@@ -37,4 +23,10 @@ export const CstFouten = {
   KamerIsNietVrij: 'Kan niet boeken omdat de kamer niet vrij is',
 }
 
-export const ContractAddress = '0xB0f060c8be1C73A6C78942B1CeEc626F2318F25F'
+export const CstNetwerken = [
+  {
+    naam: 'Ganache',
+    contractadres: '0xB0f060c8be1C73A6C78942B1CeEc626F2318F25F',
+    url: 'ws://127.0.0.1:7545',
+  },
+]

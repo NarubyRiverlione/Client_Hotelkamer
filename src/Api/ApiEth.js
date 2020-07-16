@@ -1,54 +1,63 @@
 import Web3 from 'web3'
 import HotelJson from './HotelKamer.json'
-import { ContractAddress } from '../Cst'
 
-const web3 = new Web3('ws://localhost:7545')
-
-export const GetAddressByAccountByNR = async (AccountNR) => {
-  const accounts = await web3.eth.getAccounts()
-  return accounts[AccountNR]
-}
-
-export const OphalenBalans = async (address) => {
-  const balansWei = await web3.eth.getBalance(address)
+export const OphalenBalans = async (vanAdres, web3) => {
+  const balansWei = await web3.eth.getBalance(vanAdres)
   const balansEth = web3.utils.fromWei(balansWei, 'ether')
   return parseFloat(balansEth, 10)
 }
 
-const HotelKamer = () => (
-  new web3.eth.Contract(HotelJson.abi, ContractAddress)
-)
+export default class ApiEth {
+  constructor(netwerk, account) {
+    this.web3 = new Web3(netwerk.url)
+    this.adres = account
+    this.contractadres = netwerk.contractadres
+  }
 
-export const KamerOphalen = (address) => (
-  HotelKamer().methods.kamer().call({ from: address })
-)
+  GetAddressByAccountByNR = async (AccountNR) => {
+    const accounts = await this.web3.eth.getAccounts()
+    return accounts[AccountNR]
+  }
 
-export const ZetPrijs = async (address, prijs) => {
-  const prijsWei = web3.utils.toWei(prijs.toString())
-  await HotelKamer().methods.ZetPrijs(prijsWei).send({ from: address })
-  return KamerOphalen(address)
-}
+  OphalenContractBalans = () => (
+    OphalenBalans(this.contractadres, this.web3)
+  )
 
-const ZetVrij = (address) => (
-  HotelKamer().methods.ZetVrij().send({ from: address })
-)
+  HotelKamer = () => (
+    new this.web3.eth.Contract(HotelJson.abi, this.contractadres)
+  )
 
-const ZetGeboekt = (address) => (
-  HotelKamer().methods.ZetGeboekt().send({ from: address })
-)
+  KamerOphalen = () => (
+    this.HotelKamer().methods.kamer().call({ from: this.adres })
+  )
 
-export const ZetStatus = async (address, nieuweStatus) => {
-  if (nieuweStatus === 0) await ZetVrij(address)
-  if (nieuweStatus === 1) await ZetGeboekt(address)
-  return KamerOphalen(address)
-}
+  ZetPrijs = async (prijs) => {
+    const prijsWei = this.web3.utils.toWei(prijs.toString())
+    await this.HotelKamer().methods.ZetPrijs(prijsWei).send({ from: this.adres })
+    return this.KamerOphalen()
+  }
 
-export const Uitbetaling = (address) => (
-  HotelKamer().methods.Uitbetaling().send({ from: address })
-)
+  ZetVrij = () => (
+    this.HotelKamer().methods.ZetVrij().send({ from: this.adres })
+  )
 
-export const MaakBoeking = async (address, betaling) => {
-  const betalingWei = web3.utils.toWei(betaling.toString())
-  await HotelKamer().methods.MaakBoeking().send({ from: address, value: betalingWei })
-  return KamerOphalen(address)
+  ZetGeboekt = () => (
+    this.HotelKamer().methods.ZetGeboekt().send({ from: this.adres })
+  )
+
+  ZetStatus = async (nieuweStatus) => {
+    if (nieuweStatus === 0) await this.ZetVrij()
+    if (nieuweStatus === 1) await this.ZetGeboekt()
+    return this.KamerOphalen()
+  }
+
+  Uitbetaling = () => (
+    this.HotelKamer().methods.Uitbetaling().send({ from: this.adres })
+  )
+
+  MaakBoeking = async (betaling) => {
+    const betalingWei = this.web3.utils.toWei(betaling.toString())
+    await this.HotelKamer().methods.MaakBoeking().send({ from: this.adres, value: betalingWei })
+    return this.KamerOphalen()
+  }
 }

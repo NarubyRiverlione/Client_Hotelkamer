@@ -4,26 +4,23 @@ import { CstTekst } from '../Cst'
 
 const { LandingScherm: LandingTxt } = CstTekst
 
-
-const KiesAccount = ({ AccountGekozen, Balans }) => {
+const KiesAccount = ({ Accounts, AccountGekozen, Balans }) => {
   const Keuze = (event) => {
     event.preventDefault()
     const { value } = event.target
-    const accountNR = parseInt(value, 10)
-    AccountGekozen(accountNR)
+    AccountGekozen(value)
   }
+
   return (
     <React.Fragment>
       <h4>
         {LandingTxt.AccountKeuze}
-      &nbsp;&nbsp;
-      <select onChange={Keuze}>
-          <option value={0}>Account 0</option>
-          <option value={1}>Account 1</option>
-          <option value={2}>Account 2</option>
-          <option value={3}>Account 3</option>
-          <option value={4}>Account 4</option>
-          <option value={5}>Account 5</option>
+        &nbsp;&nbsp;
+        <select onChange={Keuze}>
+          <option value="">Kies account</option>
+          {Accounts.map((account, index) => (
+            <option key={account} value={account}>{`${index}. ${account}`}</option>
+          ))}
         </select>
         &nbsp;&nbsp;
         {Balans && (<span>{`Balans: ${Balans} Eth`}</span>)}
@@ -35,10 +32,17 @@ const KiesAccount = ({ AccountGekozen, Balans }) => {
 export default KiesAccount
 
 KiesAccount.propTypes = {
+  Accounts: PropTypes.arrayOf(
+    PropTypes.shape({
+      naam: PropTypes.string.isRequired,
+      contractadres: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   AccountGekozen: PropTypes.func.isRequired,
   Balans: PropTypes.number,
 }
 
 KiesAccount.defaultProps = {
-  Balans: null
+  Balans: null,
 }

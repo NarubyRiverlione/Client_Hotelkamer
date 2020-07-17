@@ -1,11 +1,9 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { CstTekst } from '../Cst'
 
-import ApiEth from '../Api/ApiEth'
-import VerwerkFout from '../Api/VerwerkFout'
+import ApiHotelKamer, { VerwerkFout } from '../Api/ApiHotelKamer'
 
-// import KiesAccount from '../Components/KiesAccount'
 import KiesNetwerk from '../Components/KiesNetwerk'
 import ToonKamer from '../Components/ToonKamer'
 import PrijsAanpassen from '../Components/PrijsAanpassen'
@@ -18,50 +16,48 @@ import OpenenDeur from '../Components/OpenenDeur'
 const { HoofdScherm: Txt } = CstTekst
 
 const HoofdScherm = () => {
-  const [Netwerk, setNetwerk] = useState()
+  const [Api, setApi] = useState()
+  const [Balans, setBalans] = useState()
   const [Kamer, setKamer] = useState()
   const [Fout, setFout] = useState()
   const [ContractBalans, setContractBalans] = useState()
 
-  const NetwerkGekozen = (netwerk, accountAdres) => {
-    if (!netwerk || !accountAdres) {
-      setNetwerk()
+  const NetwerkEnAccountGekozen = async (netwerkUrl, accountAdres) => {
+    // beveilig terug eerste dummy optie kiezen bij accounts
+    if (!netwerkUrl || !accountAdres) {
+      setBalans()
+      setApi()
       return
     }
-    setNetwerk(new ApiEth(netwerk, accountAdres))
+    const api = new ApiHotelKamer(netwerkUrl, accountAdres)
+    const balans = await api.EigenBalansOphalen()
+    setBalans(balans)
+    setApi(api)
   }
 
   const OphalenKamer = async () => {
     try {
-      const KamerInfo = await Netwerk.KamerOphalen()
+      const KamerInfo = await Api.KamerOphalen()
       setKamer(KamerInfo)
       setFout()
     } catch (fout) {
       setFout(fout.message)
     }
   }
-  const AanpassenPrijs = async (prijs) => {
+  const ContractActie = async (actie) => {
     try {
-      const updateKamer = await Netwerk.ZetPrijs(prijs)
-      setKamer(updateKamer)
+      await actie
+      OphalenKamer()
       setFout()
     } catch (fout) {
       setFout(VerwerkFout(fout))
     }
   }
-  const AanpassenStatus = async (nieuweStatus) => {
-    try {
-      const updateKamer = await Netwerk.ZetStatus(nieuweStatus)
-      setKamer(updateKamer)
-      setFout()
-    } catch (fout) {
-      setFout(VerwerkFout(fout))
-    }
-  }
+
   const ContractBalansOpvragen = async () => {
     try {
-      const balans = await Netwerk.OphalenContractBalans()
-      setContractBalans(balans.toFixed(4))
+      const balans = await Api.OphalenContractBalans()
+      setContractBalans(balans)
       setFout()
     } catch (fout) {
       setFout(VerwerkFout(fout))
@@ -69,33 +65,16 @@ const HoofdScherm = () => {
   }
   const BetaalUit = async () => {
     try {
-      await Netwerk.Uitbetaling()
+      await Api.Uitbetaling()
       await ContractBalansOpvragen()
-      // TODO om nieuw saldo eigenaar te tonen
-      // await AccountGekozen(0)
+      const balans = await Api.EigenBalansOphalen()
+      setBalans(balans)
       setFout()
     } catch (fout) {
       setFout(VerwerkFout(fout))
     }
   }
-  const Boeken = async (betaling) => {
-    try {
-      const kamer = await Netwerk.MaakBoeking(betaling)
-      setKamer(kamer)
-      setFout()
-    } catch (fout) {
-      setFout(VerwerkFout(fout))
-    }
-  }
-  const DeurOpenen = async () => {
-    try {
-      const kamer = await Netwerk.KamerdeurOpenen()
-      setKamer(kamer)
-      setFout()
-    } catch (fout) {
-      setFout(VerwerkFout(fout))
-    }
-  }
+
   return (
     <React.Fragment>
       <h1>{Txt.Titel}</h1>
@@ -104,41 +83,42 @@ const HoofdScherm = () => {
         <h1 style={{ background: 'red', color: 'white' }}>{`Fout: ${Fout}`}</h1>
       )}
 
-      <KiesNetwerk NetwerkGekozen={NetwerkGekozen} />
+      <KiesNetwerk
+        NetwerkEnAccountGekozen={NetwerkEnAccountGekozen}
+        Balans={Balans}
+      />
 
-      {Netwerk && (
+      {Balans && (
         <div>
           <h2>{Txt.VoorEidereen}</h2>
           <ToonKamer Kamer={Kamer} OphalenKamer={OphalenKamer} />
           <br />
           <br />
           <BalansContract
-            Balans={ContractBalans}
+            ContractBalans={ContractBalans}
             Opvragen={ContractBalansOpvragen}
           />
           <br />
           <br />
-          <BoekingMaken Boeken={Boeken} />
+          <BoekingMaken Boeken={(betaling) => { ContractActie(Api.MaakBoeking(betaling)) }} />
           <br />
           <br />
           <hr />
 
           <h2>{Txt.EnkelBoeker}</h2>
-          <OpenenDeur DeurOpenen={DeurOpenen} />
+          <OpenenDeur DeurOpenen={() => { ContractActie(Api.KamerdeurOpenen()) }} />
           <br />
           <br />
           <hr />
 
           <h2>{Txt.EnkelContractEigenaar}</h2>
-          <PrijsAanpassen Aanpassen={AanpassenPrijs} />
+          <PrijsAanpassen Aanpassen={(prijs) => { ContractActie(Api.ZetPrijs(prijs)) }} />
           <br />
           <br />
-          <StatusAanpassen Aanpassen={AanpassenStatus} />
+          <StatusAanpassen Aanpassen={(nieuweStatus) => { ContractActie(Api.ZetStatus(nieuweStatus)) }} />
           <br />
           <br />
-          <Uitbetalen
-            BetaalUit={BetaalUit}
-          />
+          <Uitbetalen BetaalUit={BetaalUit} />
         </div>
       )}
     </React.Fragment>

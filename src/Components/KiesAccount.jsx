@@ -23,7 +23,7 @@ const KiesAccount = ({ Accounts, AccountGekozen, Balans }) => {
           ))}
         </select>
         &nbsp;&nbsp;
-        {Balans && (<span>{`Balans: ${Balans} Eth`}</span>)}
+        {Balans && (<span>{`Balans: ${Balans.toFixed(4)} Eth`}</span>)}
       </h4>
     </React.Fragment>
   )
@@ -32,13 +32,7 @@ const KiesAccount = ({ Accounts, AccountGekozen, Balans }) => {
 export default KiesAccount
 
 KiesAccount.propTypes = {
-  Accounts: PropTypes.arrayOf(
-    PropTypes.shape({
-      naam: PropTypes.string.isRequired,
-      contractadres: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  Accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   AccountGekozen: PropTypes.func.isRequired,
   Balans: PropTypes.number,
 }

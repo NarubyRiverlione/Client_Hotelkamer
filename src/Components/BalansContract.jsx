@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const BalansContract = ({ Balans, Opvragen }) => (
+const BalansContract = ({ ContractBalans, Opvragen }) => (
   <React.Fragment>
     Contract balans
     &nbsp;
     <button type="button" onClick={Opvragen}>opvragen</button>
     <br />
-    {Balans && (
-      <div>{`    Contract bevat ${Balans} Eth`}</div>
+    {ContractBalans && (
+      <div>{`    Contract bevat ${ContractBalans.toFixed(4)} Eth`}</div>
     )}
   </React.Fragment>
 )
@@ -16,9 +16,9 @@ const BalansContract = ({ Balans, Opvragen }) => (
 export default BalansContract
 
 BalansContract.propTypes = {
-  Balans: PropTypes.number,
+  ContractBalans: PropTypes.number,
   Opvragen: PropTypes.func.isRequired,
 }
 BalansContract.defaultProps = {
-  Balans: null,
+  ContractBalans: null,
 }

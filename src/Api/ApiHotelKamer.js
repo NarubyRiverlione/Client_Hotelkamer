@@ -1,5 +1,5 @@
 // import Web3 from 'web3'
-import { Utils } from 'web3-utils'
+import Utils from 'web3-utils'
 import HotelJson from './HotelKamer.json'
 import { CstNetwerken, CstFouten } from '../Cst'
 import Eth from './Eth'
@@ -57,7 +57,6 @@ export default class ApiHotelKamer {
   ZetStatus = async (nieuweStatus) => {
     if (nieuweStatus === 0) await this.ZetVrij()
     if (nieuweStatus === 1) await this.ZetGeboekt()
-    return this.KamerOphalen()
   }
 
   Uitbetaling = () => (

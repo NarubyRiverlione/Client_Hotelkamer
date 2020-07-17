@@ -11,13 +11,13 @@ const KiesNetwerk = ({ NetwerkEnAccountGekozen, Balans }) => {
   const KeuzeNetwerk = async (event) => {
     event.preventDefault()
     const { value: url } = event.target
+    setNetwerkUrl(url)
     if (!url) {
       // beveilig terug eerste dummy optie kiezen bij netwerken
-      setNetwerkUrl()
       setAccounts()
+      NetwerkEnAccountGekozen()
       return
     }
-    setNetwerkUrl(url)
     const accounts = await new Eth(url).OphalenAccounts()
     setAccounts(accounts)
   }

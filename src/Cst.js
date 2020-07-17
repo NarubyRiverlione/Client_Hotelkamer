@@ -10,6 +10,7 @@ export const CstTekst = {
     VoorEidereen: 'Beschikbaar voor iedereen',
     EnkelContractEigenaar: 'Enkel contract eigenaar',
     EnkelBoeker: 'Enkel voor de boeker',
+    WachtenOpBlok: 'Wachten totdat de transactie in een blok is opgenomen',
   },
   NietGevonden: {
     Tekst: 'De pagina is niet gevonden',

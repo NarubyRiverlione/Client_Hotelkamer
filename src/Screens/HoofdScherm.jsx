@@ -23,14 +23,14 @@ const HoofdScherm = () => {
   const [WachtenOpBlock, setWachtenOpBlock] = useState()
   const [ContractBalans, setContractBalans] = useState()
 
-  const NetwerkEnAccountGekozen = async (netwerkUrl, accountAdres) => {
+  const NetwerkEnAccountGekozen = async (netwerkNaam, accountAdres, provider) => {
     // beveilig terug eerste dummy optie kiezen bij accounts
-    if (!netwerkUrl || !accountAdres) {
+    if (!provider || !accountAdres) {
       setBalans()
       setApi()
       return
     }
-    const api = new ApiHotelKamer(netwerkUrl, accountAdres)
+    const api = new ApiHotelKamer(netwerkNaam, accountAdres, provider)
     const balans = await api.EigenBalansOphalen()
     setBalans(balans)
     setApi(api)

@@ -5,20 +5,26 @@ import { CstNetwerken } from '../Cst'
 import KiesAccount from './KiesAccount'
 
 const KiesNetwerk = ({ NetwerkEnAccountGekozen, Balans }) => {
-  const [NetwerkUrl, setNetwerkUrl] = useState()
+  const [Provider, setProvider] = useState()
+  const [NetwerkNaam, setNetwerkNaam] = useState()
   const [Accounts, setAccounts] = useState()
 
   const KeuzeNetwerk = async (event) => {
     event.preventDefault()
-    const { value: url } = event.target
-    setNetwerkUrl(url)
+    const { value } = event.target
+    const Netwerk = CstNetwerken.find((netwerk) => netwerk.naam === value)
+    const { url, naam } = Netwerk
+    setNetwerkNaam(naam)
     if (!url) {
       // beveilig terug eerste dummy optie kiezen bij netwerken
       setAccounts()
       NetwerkEnAccountGekozen()
       return
     }
-    const accounts = await new Eth(url).OphalenAccounts()
+    const eth = new Eth()
+    await eth.Connect(url)
+    setProvider(eth)
+    const accounts = await eth.OphalenAccounts()
     setAccounts(accounts)
   }
 
@@ -29,7 +35,7 @@ const KiesNetwerk = ({ NetwerkEnAccountGekozen, Balans }) => {
         {CstNetwerken.map((netwerk) => (
           <option
             key={netwerk.naam}
-            value={netwerk.url}
+            value={netwerk.naam}
           >
             {netwerk.naam}
           </option>
@@ -38,7 +44,7 @@ const KiesNetwerk = ({ NetwerkEnAccountGekozen, Balans }) => {
       {Accounts && (
         <KiesAccount
           Accounts={Accounts}
-          AccountGekozen={(account) => { NetwerkEnAccountGekozen(NetwerkUrl, account) }}
+          AccountGekozen={(account) => { NetwerkEnAccountGekozen(NetwerkNaam, account, Provider) }}
           Balans={Balans}
         />
       )}

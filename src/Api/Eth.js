@@ -1,11 +1,25 @@
 import Web3 from 'web3'
+import { CstMetaMask } from '../Cst'
 
 export default class Eth {
-  constructor(url) {
-    this.web3 = new Web3(url)
+  Connect = async (url) => {
+    // Local node ?
+    if (url !== CstMetaMask) { this.web3 = new Web3(url); return }
+
+    if (window.ethereum) {
+      const web3MetaMask = new Web3(window.ethereum)
+      try {
+        // Request account access if needed
+        const address = await window.ethereum.enable()
+        console.log(address)
+        this.web3 = web3MetaMask
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 
-  eGetAddressByAccountByNR = async (AccountNR) => {
+  GetAddressByAccountByNR = async (AccountNR) => {
     const accounts = await this.web3.eth.getAccounts()
     return accounts[AccountNR]
   }

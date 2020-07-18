@@ -2,7 +2,6 @@
 import Utils from 'web3-utils'
 import HotelJson from './HotelKamer.json'
 import { CstNetwerken, CstFouten } from '../Cst'
-import Eth from './Eth'
 
 export const VerwerkFout = (fout) => {
   switch (fout.message) {
@@ -19,13 +18,13 @@ export const VerwerkFout = (fout) => {
   }
 }
 
-const VindContract = (url) => CstNetwerken.find((netwerk) => netwerk.url === url).contractadres
+const VindContract = (naam) => CstNetwerken.find((netwerk) => netwerk.naam === naam).contractadres
 
 export default class ApiHotelKamer {
-  constructor(netwerkUrl, account) {
-    this.EthProvider = new Eth(netwerkUrl)
+  constructor(netwerkNaam, account, EthProvider) {
+    this.EthProvider = EthProvider
     this.adres = account
-    this.contractadres = VindContract(netwerkUrl)
+    this.contractadres = VindContract(netwerkNaam)
     this.HotelKamer = this.EthProvider.OphalenContract(HotelJson.abi, this.contractadres)
   }
 

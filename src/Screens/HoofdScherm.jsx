@@ -22,6 +22,7 @@ const HoofdScherm = () => {
   const [Fout, setFout] = useState()
   const [WachtenOpBlock, setWachtenOpBlock] = useState()
   const [ContractBalans, setContractBalans] = useState()
+  const [ToonDeelEigenaar, setToonDeelEigenaar] = useState()
 
   const NetwerkEnAccountGekozen = async (netwerkNaam, accountAdres, provider) => {
     // beveilig terug eerste dummy optie kiezen bij accounts
@@ -92,10 +93,10 @@ const HoofdScherm = () => {
       <h1>{Txt.Titel}</h1>
       <hr />
       {Fout && (
-        <h1 style={{ background: 'red', color: 'white' }}>{`Fout: ${Fout}`}</h1>
+        <h1 style={{ background: 'red', color: 'white', padding: '1rem' }}>{`Fout: ${Fout}`}</h1>
       )}
       {WachtenOpBlock && (
-        <h4 style={{ background: 'green', color: 'white' }}>
+        <h4 style={{ background: 'green', color: 'white', padding: '1rem' }}>
           {Txt.WachtenOpBlok}
         </h4>
       )}
@@ -127,15 +128,24 @@ const HoofdScherm = () => {
             <br />
             <br />
             <hr />
-
-            <h2>{Txt.EnkelContractEigenaar}</h2>
-            <PrijsAanpassen Aanpassen={(prijs) => { ContractActie(Api.ZetPrijs(prijs)) }} />
-            <br />
-            <br />
-            <StatusAanpassen Aanpassen={(nieuweStatus) => { ContractActie(Api.ZetStatus(nieuweStatus)) }} />
-            <br />
-            <br />
-            <Uitbetalen BetaalUit={BetaalUit} />
+            <h2>
+              {Txt.EnkelContractEigenaar}
+&nbsp;&nbsp;
+              <button type="button" onClick={() => setToonDeelEigenaar(!ToonDeelEigenaar)}>
+                {ToonDeelEigenaar ? 'Verberg deel' : 'Toon deel'}
+              </button>
+            </h2>
+            {ToonDeelEigenaar && (
+              <div>
+                <PrijsAanpassen Aanpassen={(prijs) => { ContractActie(Api.ZetPrijs(prijs)) }} />
+                <br />
+                <br />
+                <StatusAanpassen Aanpassen={(nieuweStatus) => { ContractActie(Api.ZetStatus(nieuweStatus)) }} />
+                <br />
+                <br />
+                <Uitbetalen BetaalUit={BetaalUit} />
+              </div>
+            )}
           </div>
         )
       }

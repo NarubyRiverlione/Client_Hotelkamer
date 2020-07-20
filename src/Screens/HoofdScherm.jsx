@@ -12,6 +12,7 @@ import BalansContract from '../Components/BalansContract'
 import Uitbetalen from '../Components/Uitbetalen'
 import BoekingMaken from '../Components/BoekingMaken'
 import OpenenDeur from '../Components/OpenenDeur'
+import PauseerContract from '../Components/PauseerContract'
 
 const { HoofdScherm: Txt } = CstTekst
 
@@ -130,7 +131,7 @@ const HoofdScherm = () => {
             <hr />
             <h2>
               {Txt.EnkelContractEigenaar}
-&nbsp;&nbsp;
+              &nbsp;&nbsp;
               <button type="button" onClick={() => setToonDeelEigenaar(!ToonDeelEigenaar)}>
                 {ToonDeelEigenaar ? 'Verberg deel' : 'Toon deel'}
               </button>
@@ -144,6 +145,12 @@ const HoofdScherm = () => {
                 <br />
                 <br />
                 <Uitbetalen BetaalUit={BetaalUit} />
+                <br />
+                <br />
+                <PauseerContract
+                  ContractPauze={() => ContractActie(Api.ContractPauze())}
+                  ContractReset={() => ContractActie(Api.Reset())}
+                />
               </div>
             )}
           </div>

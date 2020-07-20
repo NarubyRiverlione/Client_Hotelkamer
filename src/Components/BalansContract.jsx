@@ -7,8 +7,9 @@ const BalansContract = ({ ContractBalans, Opvragen }) => (
     &nbsp;
     <button type="button" onClick={Opvragen}>opvragen</button>
     <br />
+    {ContractBalans === 0 && (<div>Contract bevat geen Eth</div>)}
     {ContractBalans && (
-      <div>{`    Contract bevat ${ContractBalans.toFixed(4)} Eth`}</div>
+      <div>{`Contract bevat ${ContractBalans.toFixed(4)} Eth`}</div>
     )}
   </React.Fragment>
 )

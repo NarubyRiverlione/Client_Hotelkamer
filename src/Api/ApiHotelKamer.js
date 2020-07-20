@@ -5,14 +5,16 @@ import { CstNetwerken, CstFouten } from '../Cst'
 
 export const VerwerkFout = (fout) => {
   switch (fout.message) {
-    case CstFouten.GeenEigenaar:
+    case CstFouten.EthGeenEigenaar:
       return (CstFouten.EnkelDoorEigenaar)
-    case CstFouten.NietVrij:
+    case CstFouten.EthNietVrij:
       return (CstFouten.KamerIsNietVrij)
-    case CstFouten.IsGeenBoeker:
+    case CstFouten.EthIsGeenBoeker:
       return CstFouten.EnkelDoorBoeker
-    case CstFouten.BeschikbareDagenOpgebruikt:
+    case CstFouten.EthBeschikbareDagenOpgebruikt:
       return CstFouten.GeenBeschikbareDagen
+    case CstFouten.EthGepauzeerd:
+      return CstFouten.OpPause
     default:
       return (fout.message)
   }
@@ -70,4 +72,12 @@ export default class ApiHotelKamer {
   KamerdeurOpenen = async () => {
     await this.HotelKamer.methods.OpenDeur().send({ from: this.adres })
   }
+
+  ContractPauze = () => (
+    this.HotelKamer.methods.HandRem().send({ from: this.adres })
+  )
+
+  Reset = () => (
+    this.HotelKamer.methods.Reset().send({ from: this.adres })
+  )
 }

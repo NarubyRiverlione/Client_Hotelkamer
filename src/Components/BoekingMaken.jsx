@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { DefaultButton, TextField } from '@fluentui/react'
+
+const textFieldStyles = { fieldGroup: { width: 150 } }
 
 const BoekingMaken = ({ Boeken }) => {
   const [Betaling, setBetaling] = useState()
@@ -12,12 +15,18 @@ const BoekingMaken = ({ Boeken }) => {
   }
   return (
     <React.Fragment>
-      Betaal
-      &nbsp;
-      <input onChange={nieuweBetaling} />
-      &nbsp;
-      Eth voor een boeking &nbsp; &nbsp;
-      <button type="button" onClick={() => Boeken(Betaling)}>BETALEN</button>
+
+      <TextField
+        onChange={nieuweBetaling}
+        styles={textFieldStyles}
+        label="Betaal"
+        suffix="Eth"
+      />
+
+      <DefaultButton
+        onClick={() => Boeken(Betaling)}
+        text="BETALEN"
+      />
     </React.Fragment>
   )
 }

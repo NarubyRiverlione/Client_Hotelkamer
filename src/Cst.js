@@ -6,7 +6,7 @@ export const CstTekst = {
   },
   HoofdScherm: {
     Titel: 'Hotelkamer Smartcontract',
-    AccountKeuze: 'Gebruik',
+    AccountKeuze: 'Gebruik account',
     VoorEidereen: 'Beschikbaar voor iedereen',
     EnkelContractEigenaar: 'Enkel contract eigenaar',
     EnkelBoeker: 'Enkel voor de boeker',
@@ -36,7 +36,7 @@ export const CstMetaMask = 'metamask'
 export const CstNetwerken = [
   {
     naam: 'Ganache',
-    contractadres: '0xc8d325dC69db733aa4A832F679DE98e783d6C6C9',
+    contractadres: '0x417bdc645f374a9E32946871A0aEc920e5383e64',
     url: 'ws://127.0.0.1:7545',
   },
   {

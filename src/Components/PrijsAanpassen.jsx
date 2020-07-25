@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { DefaultButton, TextField } from '@fluentui/react'
+
+const textFieldStyles = { fieldGroup: { width: 150 } }
 
 const PrijsAanpassen = ({ Aanpassen }) => {
   const [Prijs, setPrijs] = useState()
@@ -13,13 +16,8 @@ const PrijsAanpassen = ({ Aanpassen }) => {
 
   return (
     <React.Fragment>
-      Zet de prijs per dag op
-      &nbsp;
-      <input onChange={NieuwePrijs} />
-      &nbsp;
-      Eth.
-      &nbsp; &nbsp;
-      <button type="button" onClick={() => Aanpassen(Prijs)}>Aanpassen</button>
+      <TextField label="Zet de prijs per dag op" suffix="Eth" onChange={NieuwePrijs} styles={textFieldStyles} />
+      <DefaultButton onClick={() => Aanpassen(Prijs)} text="Aanpassen" />
     </React.Fragment>
   )
 }

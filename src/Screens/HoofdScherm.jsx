@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react'
+import { DefaultButton } from '@fluentui/react'
+
 import { CstTekst } from '../Cst'
 
 import ApiHotelKamer, { VerwerkFout } from '../Api/ApiHotelKamer'
@@ -132,9 +134,10 @@ const HoofdScherm = () => {
             <h2>
               {Txt.EnkelContractEigenaar}
               &nbsp;&nbsp;
-              <button type="button" onClick={() => setToonDeelEigenaar(!ToonDeelEigenaar)}>
-                {ToonDeelEigenaar ? 'Verberg deel' : 'Toon deel'}
-              </button>
+              <DefaultButton
+                onClick={() => setToonDeelEigenaar(!ToonDeelEigenaar)}
+                text={ToonDeelEigenaar ? 'Verberg deel' : 'Toon deel'}
+              />
             </h2>
             {ToonDeelEigenaar && (
               <div>

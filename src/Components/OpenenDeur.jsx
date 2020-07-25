@@ -1,11 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { CompoundButton } from '@fluentui/react'
 
 const OpenenDeur = ({ DeurOpenen }) => (
   <React.Fragment>
-    De deur openen verbruikt een geboekte dag
-    &nbsp;&nbsp;
-    <button type="button" onClick={DeurOpenen}>Openen</button>
+    <CompoundButton
+      secondaryText="De deur openen verbruikt een geboekte dag"
+      onClick={DeurOpenen}
+      text="Openen"
+    />
   </React.Fragment>
 )
 export default OpenenDeur

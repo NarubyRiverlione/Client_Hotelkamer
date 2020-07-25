@@ -1,18 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { CompoundButton } from '@fluentui/react'
 
 const PauseerContract = ({ ContractPauze, ContractReset }) => (
   <React.Fragment>
-    Maak het onmogelijk om het contract te gebruiken
-    &nbsp;&nbsp;
-    <button type="button" onClick={ContractPauze}>PAUSE</button>
-    <br />
-    <br />
-    Reset het contract, maak het weer bruikbaar
-    &nbsp;&nbsp;
-    <button type="button" onClick={ContractReset}>R E S E T</button>
-    <br />
-    <br />
+    <CompoundButton
+      secondaryText="Maak het onmogelijk om het contract te gebruiken"
+      onClick={ContractPauze}
+      text="PAUSE"
+    />
+&nbsp;&nbsp;
+    <CompoundButton
+      primary
+      secondaryText="Reset het contract, maak het weer bruikbaar"
+      onClick={ContractReset}
+      text="R E S E T"
+    />
   </React.Fragment>
 )
 

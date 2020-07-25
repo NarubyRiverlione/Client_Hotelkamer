@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { DefaultButton } from '@fluentui/react'
 
 const Uitbetaling = ({ BetaalUit }) => (
   <React.Fragment>
-    <button type="button" onClick={BetaalUit}>Betaal nu uit</button>
+    <DefaultButton onClick={BetaalUit} text="Betaal nu uit" />
   </React.Fragment>
 )
 

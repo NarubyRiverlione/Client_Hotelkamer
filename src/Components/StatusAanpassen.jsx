@@ -1,14 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { DefaultButton } from '@fluentui/react'
 
-const StatusAanpassen = ({ Aanpassen }) => {
+const StatusAanpassen = ({ Aanpassen }) => (
+  <React.Fragment>
+    Zet kamer op
+    {' '}
+    <DefaultButton onClick={() => Aanpassen(0)} text="Vrij" />
+&nbsp;&nbsp;
+    <DefaultButton onClick={() => Aanpassen(1)} text="Geboekt" />
 
-  return (
-    <React.Fragment>
-      Zet kamer op <button type="button" onClick={() => Aanpassen(0)}>Vrij</button>&nbsp;&nbsp;<button type="button" onClick={() => Aanpassen(1)}>Geboekt</button>
-    </React.Fragment>
-  )
-}
+  </React.Fragment>
+)
 
 export default StatusAanpassen
 

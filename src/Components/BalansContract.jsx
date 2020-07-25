@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { DefaultButton } from '@fluentui/react'
 
 const BalansContract = ({ ContractBalans, Opvragen }) => (
   <React.Fragment>
-    Contract balans
-    &nbsp;
-    <button type="button" onClick={Opvragen}>opvragen</button>
+    <DefaultButton onClick={Opvragen} text="Contract balans" />
     <br />
     {ContractBalans === 0 && (<div>Contract bevat geen Eth</div>)}
     {ContractBalans && (

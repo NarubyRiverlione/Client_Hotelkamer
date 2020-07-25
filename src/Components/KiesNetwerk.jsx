@@ -1,20 +1,24 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Dropdown } from '@fluentui/react'
+
 import Eth from '../Api/Eth'
 import { CstNetwerken } from '../Cst'
 import KiesAccount from './KiesAccount'
+
+const dropdownStyles = { dropdown: { width: 200 } }
 
 const KiesNetwerk = ({ NetwerkEnAccountGekozen, Balans }) => {
   const [Provider, setProvider] = useState()
   const [NetwerkNaam, setNetwerkNaam] = useState()
   const [Accounts, setAccounts] = useState()
 
-  const KeuzeNetwerk = async (event) => {
-    event.preventDefault()
-    const { value } = event.target
-    const Netwerk = CstNetwerken.find((netwerk) => netwerk.naam === value)
-    const { url, naam } = Netwerk
-    setNetwerkNaam(naam)
+  const NetwerkKeuzeOpties = CstNetwerken.map((net) => ({ key: net.naam, text: net.naam }))
+
+  const onChange = async (event, item) => {
+    const Netwerk = CstNetwerken.find((netwerk) => netwerk.naam === item.key)
+    const { url } = Netwerk
+    setNetwerkNaam(item.key)
     if (!url) {
       // beveilig terug eerste dummy optie kiezen bij netwerken
       setAccounts()
@@ -30,17 +34,14 @@ const KiesNetwerk = ({ NetwerkEnAccountGekozen, Balans }) => {
 
   return (
     <React.Fragment>
-      <select onChange={KeuzeNetwerk}>
-        <option value="">Kies netwerk</option>
-        {CstNetwerken.map((netwerk) => (
-          <option
-            key={netwerk.naam}
-            value={netwerk.naam}
-          >
-            {netwerk.naam}
-          </option>
-        ))}
-      </select>
+      <Dropdown
+        label="Kies netwerk"
+        onChange={onChange}
+        placeholder="Netwerk"
+        options={NetwerkKeuzeOpties}
+        styles={dropdownStyles}
+      />
+
       {Accounts && (
         <KiesAccount
           Accounts={Accounts}

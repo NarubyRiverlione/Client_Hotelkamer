@@ -1,10 +1,11 @@
 import React from 'react'
+import { DefaultButton } from '@fluentui/react'
 import { utils } from 'web3'
 import PropTypes from 'prop-types'
 
 const ToonKamer = ({ Kamer, OphalenKamer }) => (
   <React.Fragment>
-    <button type="button" onClick={OphalenKamer}>Toon kamer</button>
+    <DefaultButton onClick={OphalenKamer} text="Toon kamer" />
     <br />
     {Kamer && (
       <React.Fragment>

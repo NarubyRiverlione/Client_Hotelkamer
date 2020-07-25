@@ -1,29 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Dropdown } from '@fluentui/react'
 import { CstTekst } from '../Cst'
 
 const { HoofdScherm: LandingTxt } = CstTekst
 
+const dropdownStyles = { dropdown: { width: 400 } }
+
 const KiesAccount = ({ Accounts, AccountGekozen, Balans }) => {
-  const Keuze = (event) => {
-    event.preventDefault()
-    const { value } = event.target
-    AccountGekozen(value)
+  const AccountKeuzeOpties = Accounts.map((account, index) => ({
+    key: account,
+    text: `${index}. ${account}`,
+  }))
+
+  const onChange = (event, item) => {
+    AccountGekozen(item.key)
   }
 
   return (
     <React.Fragment>
       <h4>
-        {LandingTxt.AccountKeuze}
-        &nbsp;&nbsp;
-        <select onChange={Keuze}>
-          <option value="">Kies account</option>
-          {Accounts.map((account, index) => (
-            <option key={account} value={account}>{`${index}. ${account}`}</option>
-          ))}
-        </select>
-        &nbsp;&nbsp;
+        <Dropdown
+          label={LandingTxt.AccountKeuze}
+          onChange={onChange}
+          placeholder="Kies account"
+          options={AccountKeuzeOpties}
+          styles={dropdownStyles}
+        />
+
+    &nbsp;&nbsp;
         {Balans && (<span>{`Balans: ${Balans.toFixed(4)} Eth`}</span>)}
+
       </h4>
     </React.Fragment>
   )
